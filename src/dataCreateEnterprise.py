@@ -9,6 +9,8 @@ import xlrd  # 读取 excel
 from selenium import webdriver  # python 启动浏览器
 from threading import Timer  # 定时器
 
+from pywinauto import application  # C/S 软件操作
+
 driver = webdriver.Chrome()  # 打开谷歌
 # driver = webdriver.Ie()  # 打开IE
 
@@ -17,21 +19,19 @@ driver.get("http://login.develop.wei3dian.com/login.html")
 
 driver.maximize_window()
 
-_form = driver.find_element_by_id('loginForm')
+form = driver.find_element_by_id('loginForm')
 
 driver.find_element_by_id('loginId').clear()  # 先清除用户名
-driver.find_element_by_id('loginId').send_keys(
-    'LCS2018')  # 根据id找到对应的输入框  输入用户名
+driver.find_element_by_id('loginId').send_keys('LCS2018')  # 输入用户名
 
 driver.find_element_by_id('password').clear()  # 先清除密码
-driver.find_element_by_id('password').send_keys('123456')  # 根据id找到对应的输入框  输入密码
+driver.find_element_by_id('password').send_keys('123456')  # 输入密码
 
 # 这里还要处理一下CA登录是否输入了密码
 
 time.sleep(1)
 
-driver.find_element_by_class_name(
-    'login_box_r').click()  # 关掉ca登录
+driver.find_element_by_class_name('login_box_r').click()  # 关掉ca登录
 time.sleep(1)
 driver.find_element_by_class_name('btn-block').click()  # 找到对应的按钮  登陆
 time.sleep(1)
@@ -39,30 +39,71 @@ time.sleep(1)
 driver.find_element_by_class_name('fa-cubes').click()  # 找到对应的按钮  数据中心 进入系统
 time.sleep(5)
 
-_menu_first = driver.find_element_by_name('企业机构库')
-_menu_first.click()
+menu_first = driver.find_element_by_name('企业机构库')
+menu_first.click()
 time.sleep(1)
-_menu_first.find_element_by_name('生产企业').click()  # 找到 企业机构库》生产企业  点击
+menu_first.find_element_by_name('生产企业').click()  # 找到 企业机构库》生产企业  点击
 time.sleep(1)
 
-_xlsx_path = os.path.join('docs', 'excel', '企业信息.xlsx')
-_data = xlrd.open_workbook(_xlsx_path)
+xlsx_path = os.path.join('docs', 'excel', '企业信息.xlsx')
+data = xlrd.open_workbook(xlsx_path)
 
-_table = _data.sheet_by_index(0)  # 通过索引获取excel的sheet
+table = data.sheet_by_index(0)  # 通过索引获取excel的sheet
 
-_nrows = _table.nrows
+nrows = table.nrows
 # _nrows = _table.row_values(1)
 
+
+def set_form_value(data):
+    # 设置表单的value
+    driver.find_element_by_name('create').click()
+    time.sleep(1)
+    pass
+    fromtemp = driver.find_element_by_class_name('fromtemp')
+    formitem_content = fromtemp.find_elements_by_class_name(
+        'el-form-item__content')
+    for item in formitem_content:
+        _input = item.find_element_by_css_selector('input')
+        try:
+            _input.send_keys('你好啊')
+            pass
+        except:
+            print('错了')
+            pass
+        pass
+    time.sleep(1)
+    pass
+
+
+table_key = []
+
+
+def get_table_json(row):
+    # 获取excel每一行相对应的json
+    i = 0
+    json = {}
+    while i < len(table_key):
+        json[table_key[i]] = row[i]
+        i += 1
+        pass
+    pass
+    return json
+
+
 i = 0
-while i < _nrows:
+while i < nrows:
     if i > 0:
-        __row = _table.row_values(i)  # 1, 生产企业， 生产， 广东省,深圳市,南山区
-        print(__row)
+        row = table.row_values(i)  # 1, 生产企业， 生产， 广东省,深圳市,南山区
+        data = get_table_json(row)
+        set_form_value(data)
+        pass
+    else:
+        table_key = table.row_values(i)
         pass
     i += 1
     pass
 
-print(_data)
+print(data)
 
 time.sleep(5)
 
