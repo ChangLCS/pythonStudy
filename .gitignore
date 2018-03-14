@@ -7,6 +7,7 @@ yarn-error.log*
 
 src/domeSelenium1.py
 config.py
+__pycache__
 
 # Editor directories and files
 .vscode
