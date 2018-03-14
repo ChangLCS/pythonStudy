@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 src/domeSelenium1.py
-docs/conf.py
+config.py
 
 # Editor directories and files
 .vscode

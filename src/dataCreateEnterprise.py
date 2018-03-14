@@ -4,6 +4,9 @@ import time
 
 import os  # 文件、目录模块
 import sys
+sys.path.append("..")
+
+import config
 
 import xlrd  # 读取 excel
 from selenium import webdriver  # python 启动浏览器
@@ -11,23 +14,22 @@ from threading import Timer  # 定时器
 
 from pywinauto import application  # C/S 软件操作
 
-from docs.conf import Config
 
 driver = webdriver.Chrome()  # 打开谷歌
 # driver = webdriver.Ie()  # 打开IE
 
 # Load page 在地址栏输入http://www.baidu.com 进入百度
-driver.get(Config.assestpath)
+# driver.get(Config.assestpath)
 
 driver.maximize_window()
 
 form = driver.find_element_by_id('loginForm')
 
 driver.find_element_by_id('loginId').clear()  # 先清除用户名
-driver.find_element_by_id('loginId').send_keys(Config.username)  # 输入用户名
+# driver.find_element_by_id('loginId').send_keys(Config.username)  # 输入用户名
 
 driver.find_element_by_id('password').clear()  # 先清除密码
-driver.find_element_by_id('password').send_keys(Config.password)  # 输入密码
+# driver.find_element_by_id('password').send_keys(Config.password)  # 输入密码
 
 # 这里还要处理一下CA登录是否输入了密码
 
