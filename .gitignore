@@ -11,7 +11,3 @@ docs/conf.py
 # Editor directories and files
 .vscode
 .idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
