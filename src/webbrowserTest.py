@@ -5,7 +5,8 @@ import time
 import os  # 文件、目录模块
 import sys
 import xlrd  # 读取 excel
-from selenium import webdriver  # python 启动浏览器
+import webbrowser
+from selenium import webdriver  # apython 启动浏览器
 from threading import Timer  # 定时器
 
 assestpath = os.path.abspath(os.path.join(__file__, '../..'))  # 工程根目录
