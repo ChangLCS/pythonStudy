@@ -8,15 +8,10 @@
 
 *   xlrd **1.1.0** _读取 excel_
 
--   config.py 模块的代码
+*   pywin32 _操作系统_
+
+-   打包命令，要在项目目录那里，根据 **sys.path** 看所有目录，一个一个加进去
 
 ```
-import os
-
-class Config:
-    username = ''  # 用户名
-    password = ''  # 密码
-    userurl = ''  # 要打开的url
-    assestpath = os.path.abspath('')
-    pass
+pyinstaller.exe -F src/watch.py -p f:\\Work\\domeSelenium1 -p f:\\Work\\domeSelenium1\\src -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\python36.zip -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\DLLs -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36 -p C:\\Users\\Dev\\AppData\\Roaming\\Python\\Python36\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32 -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\Pythonwin
 ```
