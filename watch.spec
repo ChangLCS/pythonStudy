@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['src\\shopcart.py'],
+a = Analysis(['src\\watch.py'],
              pathex=['f:\\\\Work\\\\domeSelenium1', 'f:\\\\Work\\\\domeSelenium1\\\\src', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\python36.zip', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\DLLs', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Roaming\\\\Python\\\\Python36\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\Pythonwin', 'F:\\Work\\domeSelenium1'],
              binaries=[],
              datas=[],
@@ -18,16 +18,12 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          exclude_binaries=True,
-          name='shopcart',
+          a.binaries,
+          a.zipfiles,
+          a.datas,
+          name='watch',
           debug=False,
           strip=False,
           upx=True,
+          runtime_tmpdir=None,
           console=True )
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               name='shopcart')

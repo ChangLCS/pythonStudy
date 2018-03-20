@@ -1,50 +1,66 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from watchdog.observers import Observer
-from watchdog.events import *
+# 说明: 导入公共模块
 import time
+import os
+import sys
+from watchdog.events import FileSystemEventHandler
+import shopcart
+# 说明: 导入其它模块
+
+assestpath = os.path.abspath(os.path.join(__file__, '../..'))  # 工程根目录
+sys.path.insert(0, assestpath)
 
 
-class FileEventHandler(FileSystemEventHandler):
-    def __init__(self):
-        FileSystemEventHandler.__init__(self)
+class CustomerHandler(FileSystemEventHandler):
 
-    def on_moved(self, event):
-        if event.is_directory:
-            print('directory moved from {0} to {1}'.format(
-                event.src_path, event.dest_path))
-        else:
-            print('file moved from {0} to {1}'.format(event.src_path,
-                                                      event.dest_path))
+    xlsx_path = os.path.abspath(os.path.join(
+        __file__, '..', 'docs', '订单明细目录.xls'))
+    is_modified = False
 
+    def dispatch(self, event):
+        if 'docs' in event.src_path and '订单明细目录.xls' in event.src_path:
+            print('event', event)
+            if self.is_modified == True:
+                self.is_modified = False
+                self.on_modified(event)
+                pass
+            elif hasattr(event, 'dest_path') and len(event.dest_path) > 0:
+                self.is_modified = True
+            pass
+
+    # 新增
     def on_created(self, event):
-        if event.is_directory:
-            print('directory created:{0}'.format(event.src_path))
-        else:
-            print('file created:{0}'.format(event.src_path))
+        pass
 
+    # 删除
     def on_deleted(self, event):
-        if event.is_directory:
-            print('directory deleted:{0}'.format(event.src_path))
-        else:
-            print('file deleted:{0}'.format(event.src_path))
+        pass
 
+    # 修改
     def on_modified(self, event):
-        if event.is_directory:
-            print('directory modified:{0}'.format(event.src_path))
-        else:
-            print('file modified:{0}'.format(event.src_path))
+        shopcart.do_shopcart(self.xlsx_path)
+        print('on_modified', self, event)
+        pass
+
+    # 移动
+    def on_moved(self, event):
+        pass
 
 
-if __name__ == '__main__':
-    observer = Observer()
-    event_handler = FileEventHandler()
-    observer.schedule(event_handler, 'd:/dcm', True)
-    observer.start()
+def start_watching(event_handler, path='.', recursive=True):
+    from watchdog.observers import Observer
+    watcher = Observer()
+    watcher.schedule(event_handler, path, recursive)
+    watcher.start()
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+        watcher.stop()
+
+
+if __name__ == '__main__':
+    event_handler = CustomerHandler()
+    start_watching(event_handler, '..')
