@@ -25,6 +25,13 @@ class Position:
     def TJMX_Y(self):
         return int(self.now_hWnd_Y1 + 275)
 
+    # 第一条数据的位置
+    def FIRSTDATA_X(self):
+        return int(self.now_hWnd_X1 + 420)
+
+    def FIRSTDATA_Y(self):
+        return int(self.now_hWnd_Y1 + 340)
+
     # 已知弹出框 width 90% top 15%
     # 订单管理-订单购物车-添加明细--药品编码搜索
     def YPBMSS_X(self):

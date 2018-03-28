@@ -11,6 +11,9 @@ import win32api
 import win32con
 import win32com.client
 
+import pythoncom
+import pyHook   # 监听键盘或鼠标
+
 assestpath = os.path.abspath(os.path.join(__file__, '../..'))  # 工程根目录
 sys.path.insert(0, assestpath)
 from position import Pos
@@ -19,13 +22,32 @@ from keyboard import JSON as KEYJSON
 shell = win32com.client.Dispatch('WScript.Shell')
 
 
+def DOUBLE_CLICK():
+    # 双击事件，直接调用
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)  # 左键点击
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)  # 左键点击
+    pass
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)  # 左键点击
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)  # 左键点击
+    pass
+
+
+def TAB_KEYUP():
+    # 按TAB
+    win32api.keybd_event(win32con.VK_TAB, 0, 0, 0)
+    win32api.keybd_event(win32con.VK_TAB, 0, win32con.KEYEVENTF_KEYUP, 0)
+    pass
+
+
 def do_shopcart(xlsx_path=''):
     try:
         data = xlrd.open_workbook(xlsx_path)
         table = data.sheet_by_index(0)  # 通过索引获取excel的sheet
         nrows = table.nrows
-        table_index = 0
+        drug_code_index = 0
         drug_arr = []
+        num_index = 0
+        num_arr = []
         pass
     except Exception:
         return Exception
@@ -35,12 +57,15 @@ def do_shopcart(xlsx_path=''):
         if i > 0:
             # 得出整条数据，并取药品编码
             row = table.row_values(i)
-            if len(str(row[table_index])) > 0:
-                drug_arr.append(str(row[table_index]))
-            pass
+            if len(str(row[drug_code_index])) > 0 and len(str(row[num_index])) > 0:
+                drug_arr.append(str(row[drug_code_index]))
+                num_arr.append(str(row[num_index]))
+                pass
         else:
-            # 获得药品编码在那一列
-            table_index = table.row_values(i).index('药品编码')
+            # 获得药品编码在哪一列
+            drug_code_index = table.row_values(i).index('药品编码')
+            # 获得订单数量在哪一列
+            num_index = table.row_values(i).index('订单数量')
             pass
         i += 1
         pass
@@ -90,7 +115,7 @@ def do_shopcart(xlsx_path=''):
     print('-------------------------------------------------')
     print('-------------------------------------------------')
 
-    def find_drugs(code):
+    def find_drugs(code, num, index):
         # 添加明细
         win32api.SetCursorPos([Pos.TJMX_X(), Pos.TJMX_Y()])  # 设置鼠标位置
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)  # 左键点击
@@ -152,16 +177,38 @@ def do_shopcart(xlsx_path=''):
         time.sleep(1)
         pass
 
-        print(code)
+        # 初始化tab焦点
+        win32api.SetCursorPos([Pos.FIRSTDATA_X(), Pos.FIRSTDATA_Y()])  # 设置鼠标位置
+        DOUBLE_CLICK()
+        time.sleep(0.5)
+
+        count = 0
+        while count < index + 1:
+            TAB_KEYUP()
+            count += 1
+            pass
+        time.sleep(0.5)
+
+        num_list = list(str(int(num)))
+        for value in num_list:
+            win32api.keybd_event(KEYJSON[value], 0, 0, 0)
+            win32api.keybd_event(
+                KEYJSON[value], 0, win32con.KEYEVENTF_KEYUP, 0)
+            pass
+        time.sleep(0.5)
+
+        print(code, num)
         pass
 
     i = 0
     while i < len(drug_arr):
-        find_drugs(drug_arr[i])
+        find_drugs(drug_arr[i], float(num_arr[i]), i)
         i += 1
         pass
 
 
 if __name__ == '__main__':
     print(__file__)
-    do_shopcart('')
+    _path = os.path.abspath(os.path.join(
+        __file__, '..', 'docs', '订单明细目录.xls'))
+    do_shopcart(_path)
