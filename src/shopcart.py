@@ -11,8 +11,8 @@ import win32api
 import win32con
 import win32com.client
 
-import pythoncom
-import pyHook   # 监听键盘或鼠标
+from pynput import keyboard
+
 
 assestpath = os.path.abspath(os.path.join(__file__, '../..'))  # 工程根目录
 sys.path.insert(0, assestpath)
@@ -20,6 +20,28 @@ from position import Pos
 from keyboard import JSON as KEYJSON
 
 shell = win32com.client.Dispatch('WScript.Shell')
+
+
+def on_press(key):
+    try:
+        print('alphanumeric key {0} pressed-----------', key)
+    except AttributeError:
+        print('special key {0} pressed-----------', key)
+
+
+def on_release(key):
+    print('{0} released--------------', key)
+    if key == keyboard.Key.esc:
+        return False
+
+
+def main():
+    print('main')
+    while True:
+        with keyboard.Listener(
+                on_press=on_press,
+                on_release=on_release) as listener:
+            listener.join()
 
 
 def DOUBLE_CLICK():
@@ -109,7 +131,7 @@ def do_shopcart(xlsx_path=''):
         pass
 
     if ishave_trade == False:
-        win32api.MessageBox(0, "没有找到交易平台", "error", win32con.MB_OK)
+        win32api.MessageBox(0, '没有找到交易平台', 'error', win32con.MB_OK)
         return
 
     print('-------------------------------------------------')
@@ -208,6 +230,7 @@ def do_shopcart(xlsx_path=''):
 
 
 if __name__ == '__main__':
+    main()
     print(__file__)
     _path = os.path.abspath(os.path.join(
         __file__, '..', 'docs', '订单明细目录.xls'))
