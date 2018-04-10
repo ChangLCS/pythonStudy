@@ -61,6 +61,18 @@ class Position:
     def SUREBTN_Y(self):
         return int(self.now_hWnd_Y2 - (self.now_hWnd_Y2 - self.now_hWnd_Y1) * 0.15 - 50)
 
+    # 弹框列表第一条的选中按钮区域
+    def SCREEN_IMAGE_POSITION(self):
+        _X1 = int((self.now_hWnd_X2 - self.now_hWnd_X1)
+                  * 0.05 + self.now_hWnd_X1 + 24)
+        _X2 = int((self.now_hWnd_X2 - self.now_hWnd_X1)
+                  * 0.05 + self.now_hWnd_X1 + 54)
+        _Y1 = int((self.now_hWnd_Y2 - self.now_hWnd_Y1)
+                  * 0.15 + self.now_hWnd_Y1 + 180)
+        _Y2 = int((self.now_hWnd_Y2 - self.now_hWnd_Y1)
+                  * 0.15 + self.now_hWnd_Y1 + 200)
+        return (_X1, _Y1, _X2, _Y2)
+
 
 Pos = Position()
 
