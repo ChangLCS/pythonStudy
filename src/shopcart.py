@@ -27,10 +27,6 @@ ishave_num = False
 
 
 def on_press(key):
-    # try:
-    #     print('alphanumeric key {0} pressed-----------', key)
-    # except AttributeError:
-    #     print('special key {0} pressed-----------', key)
     pass
 
 
