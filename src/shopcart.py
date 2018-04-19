@@ -4,7 +4,6 @@
 import time
 import os  # 文件、目录模块
 import sys
-import xlrd  # 读取 excel
 
 import win32gui
 import win32api
@@ -42,7 +41,7 @@ def main():
         with keyboard.Listener(on_press, on_release) as listener:
             print(__file__)
             _path = os.path.abspath(os.path.join(
-                __file__, '..', 'docs', '订单明细目录.xls'))
+                __file__, '..', 'docs', '订单明细目录.txt'))
             do_shopcart(_path)
             listener.join()
 
@@ -64,38 +63,40 @@ def TAB_KEYUP():
     pass
 
 
-def do_shopcart(xlsx_path=''):
+def do_shopcart(file_path=''):
     global ishave_num
+    txt_data = []
     print('do_shopcart')
     try:
-        data = xlrd.open_workbook(xlsx_path)
-        table = data.sheet_by_index(0)  # 通过索引获取excel的sheet
-        nrows = table.nrows
-        drug_code_index = 0
-        drug_arr = []
-        num_index = 0
-        num_arr = []
+        txt = open(file_path)
+        for item in txt:
+            item_text = item.replace('\n', '').split('&')
+            if not(len(item_text) == 1 and len(item_text[0]) == 0):
+                txt_data.append(item_text)
+                pass
+        nrows = len(txt_data)
+        txt.close()
         pass
     except Exception:
         return Exception
+    print('txt_data', txt_data)
 
     i = 0
+    drug_arr = []
+    num_arr = []
+    drug_code_index = 2  # 医院药品编码的位置索引
+    num_index = 4  # 药品数量的位置索引
     while i < nrows:
-        if i > 0:
-            # 得出整条数据，并取药品编码
-            row = table.row_values(i)
-            if len(str(row[drug_code_index])) > 0 and len(str(row[num_index])) > 0:
-                drug_arr.append(str(row[drug_code_index]))
-                num_arr.append(str(row[num_index]))
-                pass
-        else:
-            # 获得药品编码在哪一列
-            drug_code_index = table.row_values(i).index('药品编码')
-            # 获得订单数量在哪一列
-            num_index = table.row_values(i).index('订单数量')
+        row = txt_data[i]
+        print('row', row)
+        if len(row) >= drug_code_index and len(row) >= num_index and len(str(row[drug_code_index])) > 0 and len(str(row[drug_code_index])) > 1 and len(str(row[num_index])) > 0 and row[num_index].isdigit():
+            drug_arr.append(str(row[drug_code_index]))
+            num_arr.append(str(row[num_index]))
             pass
         i += 1
         pass
+    print('drug_arr', drug_arr)
+    print('num_arr', num_arr)
 
     windows = {}  # 所有的窗口
     win_id = 0  # 准备要操作的窗口id
@@ -143,6 +144,7 @@ def do_shopcart(xlsx_path=''):
     print('-------------------------------------------------')
 
     def find_drugs(code, num, index):
+        print(code, num, index)
         global ishave_num
         # 添加明细
         win32api.SetCursorPos([Pos.TJMX_X(), Pos.TJMX_Y()])  # 设置鼠标位置
@@ -162,6 +164,7 @@ def do_shopcart(xlsx_path=''):
         win32api.keybd_event(win32con.VK_LCONTROL, 0, 0, 0)
         time.sleep(0.1)
         win32api.keybd_event(KEYJSON['A'], 0, 0, 0)
+        time.sleep(0.1)
         win32api.keybd_event(KEYJSON['A'], 0, win32con.KEYEVENTF_KEYUP, 0)
         win32api.keybd_event(win32con.VK_LCONTROL, 0,
                              win32con.KEYEVENTF_KEYUP, 0)
@@ -173,8 +176,10 @@ def do_shopcart(xlsx_path=''):
         for value in code_list:
             if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                 win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)
+                time.sleep(0.1)
                 pass
             win32api.keybd_event(KEYJSON[value], 0, 0, 0)
+            time.sleep(0.1)
             win32api.keybd_event(
                 KEYJSON[value], 0, win32con.KEYEVENTF_KEYUP, 0)
             if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
@@ -247,12 +252,16 @@ def do_shopcart(xlsx_path=''):
     table_index = 0
     while i < len(drug_arr):
         ishave_num = False
+        print('num_arr[i]', num_arr[i])
         find_drugs(drug_arr[i], float(num_arr[i]), table_index)
         if ishave_num:
             table_index += 1
         i += 1
         pass
 
+    txt = open(file_path, 'w')
+    txt.write('')
+    txt.close()
     os._exit(0)
 
 
