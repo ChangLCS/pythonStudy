@@ -10,10 +10,13 @@
 
 *   pywin32 _操作系统_
 
-*   pynput  Python控制、监听键盘鼠标
+*   pynput Python 控制、监听键盘鼠标
 
 -   打包命令，要在项目目录那里，根据 **sys.path** 看所有目录，一个一个加进去
 
+-   -w 不带命令行 没加的话就是带着；
+-   -F 把所有程序跟引用包打成一个 exe；
+
 ```
-pyinstaller.exe -F src/watch.py -p f:\\Work\\domeSelenium1 -p f:\\Work\\domeSelenium1\\src -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\python36.zip -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\DLLs -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36 -p C:\\Users\\Dev\\AppData\\Roaming\\Python\\Python36\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32 -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\Pythonwin
+pyinstaller.exe -w -F src/gui_PyQt5.py -p f:\\Work\\domeSelenium1 -p f:\\Work\\domeSelenium1\\src -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\python36.zip -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\DLLs -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36 -p C:\\Users\\Dev\\AppData\\Roaming\\Python\\Python36\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32 -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\win32\\lib -p C:\\Users\\Dev\\AppData\\Local\\Programs\\Python\\Python36\\lib\\site-packages\\Pythonwin
 ```

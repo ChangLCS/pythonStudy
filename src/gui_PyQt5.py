@@ -4,6 +4,7 @@
 import sys
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser)
+from shopcart import main as shopcartMain
 
 
 class AppWindow(QWidget):
@@ -11,14 +12,33 @@ class AppWindow(QWidget):
         super().__init__()
         self.initUI()
 
+    # 提交数据事件
+    def submitEvent(self):
+        print(self.textEdit.toPlainText())
+        shopcartMain(self.textEdit.toPlainText())
+        pass
+
+    # 清楚文本框
+    def cleanEvent(self):
+        print(self.textEdit.toPlainText())
+        self.textEdit.setText('')
+        pass
+
     def initUI(self):
         # 扫码录入文本框
         text = QLabel('扫码录入')
-        textEdit = QTextEdit()
+        self.textEdit = QTextEdit()
+        pass
 
         # 提交按钮
         submitbtn = QPushButton('提交数据', self)
         submitbtn.resize(submitbtn.sizeHint())
+        submitbtn.clicked.connect(self.submitEvent)
+
+        # 取消按钮
+        cleanbtn = QPushButton('清楚现有数据', self)
+        cleanbtn.resize(submitbtn.sizeHint())
+        cleanbtn.clicked.connect(self.cleanEvent)
 
         # 文本历史
         log = QLabel('历史记录')
@@ -27,8 +47,9 @@ class AppWindow(QWidget):
         # 创建布局
         grid = QGridLayout()
         grid.addWidget(text, 1, 0)
-        grid.addWidget(textEdit, 1, 1, 1, 1)
+        grid.addWidget(self.textEdit, 1, 1, 1, 1)
         grid.addWidget(submitbtn, 2, 0)
+        grid.addWidget(cleanbtn, 2, 1)
         grid.addWidget(log, 3, 0)
         grid.addWidget(logText, 3, 1, 5, 1)
 

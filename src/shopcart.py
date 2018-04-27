@@ -31,19 +31,25 @@ def on_press(key):
 
 def on_release(key):
     if key == keyboard.Key.esc:
-        os._exit(0)
+        # os._exit(0)
         return False
 
 
-def main():
+def main(txt=''):
     print('main')
-    while True:
-        with keyboard.Listener(on_press, on_release) as listener:
-            print(__file__)
-            _path = os.path.abspath(os.path.join(
-                __file__, '..', 'docs', '订单明细目录.txt'))
-            do_shopcart(_path)
-            listener.join()
+    # with keyboard.Listener(on_press, on_release) as listener:
+    print(__file__)
+    # _path = os.path.abspath(os.path.join(
+    #     __file__, '..', 'docs', '订单明细目录.txt'))
+    if (len(txt) == 0):
+        win32api.MessageBox(0, '请录入数据', 'error', win32con.MB_OK)
+        return False
+
+    _ret = do_shopcart(txt)
+    # listener.join()
+    # if(_ret == False):
+    #     listener.stop()
+    #     pass
 
 
 def DOUBLE_CLICK():
@@ -63,19 +69,19 @@ def TAB_KEYUP():
     pass
 
 
-def do_shopcart(file_path=''):
+def do_shopcart(txt=''):
     global ishave_num
+    txt_arr = txt.split('\n')
     txt_data = []
     print('do_shopcart')
     try:
-        txt = open(file_path)
-        for item in txt:
-            item_text = item.replace('\n', '').split('&')
+        # txt = open(file_path)
+        for item in txt_arr:
+            item_text = item.split('&')
             if not(len(item_text) == 1 and len(item_text[0]) == 0):
                 txt_data.append(item_text)
                 pass
         nrows = len(txt_data)
-        txt.close()
         pass
     except Exception:
         return Exception
@@ -138,7 +144,9 @@ def do_shopcart(file_path=''):
 
     if ishave_trade == False:
         win32api.MessageBox(0, '没有找到交易平台', 'error', win32con.MB_OK)
-        return
+        # os._exit(0)
+        # sys.exit()
+        return False
 
     print('-------------------------------------------------')
     print('-------------------------------------------------')
@@ -259,10 +267,10 @@ def do_shopcart(file_path=''):
         i += 1
         pass
 
-    txt = open(file_path, 'w')
-    txt.write('')
-    txt.close()
-    os._exit(0)
+    # txt = open(file_path, 'w')
+    # txt.write('')
+    # txt.close()
+    return False
 
 
 if __name__ == '__main__':
