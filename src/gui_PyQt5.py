@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import time
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser)
 from shopcart import main as shopcartMain
@@ -15,7 +16,13 @@ class AppWindow(QWidget):
     # 提交数据事件
     def submitEvent(self):
         print(self.textEdit.toPlainText())
-        shopcartMain(self.textEdit.toPlainText())
+        ret = shopcartMain(self.textEdit.toPlainText())
+        if ret == True:
+            oldText = self.logText.toPlainText()
+            newText = '\n----------%s----------\n%s\n%s' % (
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), self.textEdit.toPlainText(), oldText)
+            self.logText.setText(newText)
+            print('newText', newText)
         pass
 
     # 清楚文本框
@@ -42,7 +49,7 @@ class AppWindow(QWidget):
 
         # 文本历史
         log = QLabel('历史记录')
-        logText = QTextEdit()
+        self.logText = QTextEdit()
 
         # 创建布局
         grid = QGridLayout()
@@ -51,7 +58,7 @@ class AppWindow(QWidget):
         grid.addWidget(submitbtn, 2, 0)
         grid.addWidget(cleanbtn, 2, 1)
         grid.addWidget(log, 3, 0)
-        grid.addWidget(logText, 3, 1, 5, 1)
+        grid.addWidget(self.logText, 3, 1, 5, 1)
 
         self.setLayout(grid)
         pass

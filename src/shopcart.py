@@ -46,6 +46,7 @@ def main(txt=''):
         return False
 
     _ret = do_shopcart(txt)
+    return _ret
     # listener.join()
     # if(_ret == False):
     #     listener.stop()
@@ -270,7 +271,7 @@ def do_shopcart(txt=''):
     # txt = open(file_path, 'w')
     # txt.write('')
     # txt.close()
-    return False
+    return True
 
 
 if __name__ == '__main__':
