@@ -240,7 +240,7 @@ def do_shopcart(txt=''):
             time.sleep(0.5)
 
             count = 0
-            while count < index + 1:
+            while count < 2 * index + 1:
                 TAB_KEYUP()
                 count += 1
                 pass

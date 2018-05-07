@@ -23,12 +23,18 @@ class AppWindow(QWidget):
                 time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), self.textEdit.toPlainText(), oldText)
             self.logText.setText(newText)
             print('newText', newText)
+            self.textEdit.setText('')
         pass
 
-    # 清楚文本框
+    # 清除文本框
     def cleanEvent(self):
         print(self.textEdit.toPlainText())
         self.textEdit.setText('')
+        pass
+
+    # 清除历史数据
+    def cleanlogEvent(self):
+        self.logText.setText('')
         pass
 
     def initUI(self):
@@ -43,22 +49,34 @@ class AppWindow(QWidget):
         submitbtn.clicked.connect(self.submitEvent)
 
         # 取消按钮
-        cleanbtn = QPushButton('清楚现有数据', self)
-        cleanbtn.resize(submitbtn.sizeHint())
+        cleanbtn = QPushButton('清除现有数据', self)
+        cleanbtn.resize(cleanbtn.sizeHint())
         cleanbtn.clicked.connect(self.cleanEvent)
+
+        # 清除历史数据按钮
+        cleanlogbtn = QPushButton('清除历史数据', self)
+        cleanlogbtn.resize(cleanlogbtn.sizeHint())
+        cleanlogbtn.clicked.connect(self.cleanlogEvent)
 
         # 文本历史
         log = QLabel('历史记录')
         self.logText = QTextEdit()
+        self.logText.setReadOnly(True)
 
         # 创建布局
+        # 一般情况下我们都是把某个窗口部件放进栅格布局的一个单元中，但窗口部件有时也可能会需要占用多个单元。这时就需要用到addWidget()方法的一个重载版本，原型如下：
+
+        # void addWidget(QWidget *, int row, int column, int rowSpan, int columnSpan, Qt::Alignment = 0);
+
+        # 这个单元将从row和column开始，扩展到rowSpan和columnSpan指定的倍数的行和列。如果rowSpan或columnSpan的值为-1，则窗口部件将扩展到布局的底部或者右边边缘处。
         grid = QGridLayout()
-        grid.addWidget(text, 1, 0)
-        grid.addWidget(self.textEdit, 1, 1, 1, 1)
-        grid.addWidget(submitbtn, 2, 0)
-        grid.addWidget(cleanbtn, 2, 1)
-        grid.addWidget(log, 3, 0)
-        grid.addWidget(self.logText, 3, 1, 5, 1)
+        grid.addWidget(text, 0, 0, 6, 2)
+        grid.addWidget(self.textEdit, 0, 2, 6, 10)
+        grid.addWidget(submitbtn, 6, 0, 1, 4)
+        grid.addWidget(cleanbtn, 6, 4, 1, 4)
+        grid.addWidget(cleanlogbtn, 6, 8, 1, 4)
+        grid.addWidget(log, 7, 0, 6, 2)
+        grid.addWidget(self.logText, 7, 2, 6, 10)
 
         self.setLayout(grid)
         pass
