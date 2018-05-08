@@ -6,11 +6,18 @@ import os  # 文件、目录模块
 import time
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider)
-from PyQt5.QtGui import (QIcon)
+from PyQt5.QtGui import (QIcon, QPixmap)
+from PyQt5.QtCore import (QSize)
 from shopcart import main as shopcartMain
+
+import requests
+
+placeholder = '请扫码录入并点击提交，'
 
 
 class AppWindow(QWidget):
+    global placeholder
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -39,39 +46,75 @@ class AppWindow(QWidget):
         self.logText.setText('')
         pass
 
-    def initUI(self):
-        # 扫码录入文本框
-        text = QLabel('扫码录入')
-        self.textEdit = QTextEdit()
+    # 文本焦点
+    def textEditFocusInEvent(self, event):
+        if (self.textEdit.toPlainText() == placeholder):
+            self.textEdit.setText('')
+            self.textEdit.setStyleSheet('color: #000;')
         pass
 
-        iconSubmit = QIcon(os.path.abspath(os.path.join(
-            __file__, '..', 'images', 'icon-submit.png')))
-        iconClose = QIcon(os.path.abspath(os.path.join(
-            __file__, '..', 'images', 'icon-close.png')))
+    # 文本焦点消失
+    def textEditFocusOutEvent(self, event):
+        if (len(self.textEdit.toPlainText()) == 0):
+            self.textEdit.setText(placeholder)
+            self.textEdit.setStyleSheet('color: #999;')
+        pass
+
+    def initUI(self):
+        submitimgreq = requests.get(
+            'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-submit.png')
+        submitimg = QPixmap()
+        submitimg.loadFromData(submitimgreq.content)
+        iconSubmit = QIcon(submitimg)
+        pass
+
+        closeimgreq = requests.get(
+            'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-reload.png')
+        closeimg = QPixmap()
+        closeimg.loadFromData(closeimgreq.content)
+        iconClose = QIcon(closeimg)
+        pass
 
         # 提交按钮
         submitbtn = QPushButton('提交数据', self)
-        submitbtn.resize(submitbtn.sizeHint())
+        submitbtn.setFixedHeight(60)
+        submitbtn.setStyleSheet(
+            'font-size: 30px; font-weight: bold; ')
         submitbtn.clicked.connect(self.submitEvent)
         submitbtn.setIcon(iconSubmit)
+        submitbtn.setIconSize(QSize(40, 40))
+        pass
 
         # 取消按钮
-        cleanbtn = QPushButton('清除现有数据', self)
+        cleanbtn = QPushButton(self)
         cleanbtn.resize(cleanbtn.sizeHint())
         cleanbtn.clicked.connect(self.cleanEvent)
         cleanbtn.setIcon(iconClose)
+        cleanbtn.setIconSize(QSize(20, 20))
+        pass
 
         # 清除历史数据按钮
-        cleanlogbtn = QPushButton('清除历史数据', self)
+        cleanlogbtn = QPushButton(self)
         cleanlogbtn.resize(cleanlogbtn.sizeHint())
         cleanlogbtn.clicked.connect(self.cleanlogEvent)
         cleanlogbtn.setIcon(iconClose)
+        cleanlogbtn.setIconSize(QSize(20, 20))
+        pass
+
+        # 扫码录入文本框
+        text = QLabel('扫码录入')
+        self.textEdit = QTextEdit()
+        self.textEdit.setText(placeholder)
+        self.textEdit.setStyleSheet('color: #999;')
+        self.textEdit.focusInEvent = self.textEditFocusInEvent
+        self.textEdit.focusOutEvent = self.textEditFocusOutEvent
+        pass
 
         # 文本历史
         log = QLabel('历史记录')
         self.logText = QTextEdit()
         self.logText.setReadOnly(True)
+        pass
 
         # 创建布局
         # 一般情况下我们都是把某个窗口部件放进栅格布局的一个单元中，但窗口部件有时也可能会需要占用多个单元。这时就需要用到addWidget()方法的一个重载版本，原型如下：
@@ -80,13 +123,14 @@ class AppWindow(QWidget):
 
         # 这个单元将从row和column开始，扩展到rowSpan和columnSpan指定的倍数的行和列。如果rowSpan或columnSpan的值为-1，则窗口部件将扩展到布局的底部或者右边边缘处。
         grid = QGridLayout()
-        grid.addWidget(text, 0, 0, 6, 2)
+        grid.addWidget(text, 0, 0, 5, 2)
         grid.addWidget(self.textEdit, 0, 2, 6, 10)
-        grid.addWidget(submitbtn, 6, 0, 1, 4)
-        grid.addWidget(cleanbtn, 6, 4, 1, 4)
-        grid.addWidget(cleanlogbtn, 6, 8, 1, 4)
-        grid.addWidget(log, 7, 0, 6, 2)
-        grid.addWidget(self.logText, 7, 2, 6, 10)
+        grid.addWidget(cleanbtn, 5, 0, 1, 1)
+        grid.addWidget(submitbtn, 6, 2, 2, 10)
+        grid.addWidget(log, 8, 0, 4, 2)
+        grid.addWidget(cleanlogbtn, 12, 0, 1, 1)
+        grid.addWidget(self.logText, 8, 2, 5, 10)
+        pass
 
         self.setLayout(grid)
         pass
@@ -96,7 +140,7 @@ class AppWindow(QWidget):
         # move()方法移动窗口在屏幕上的位置到x = 300，y = 300坐标。
         self.center()
         # 设置窗口的标题
-        self.setWindowTitle('自动录单')
+        self.setWindowTitle('自动录单系统')
         # 显示在屏幕上
         self.show()
         pass
@@ -117,6 +161,7 @@ if __name__ == '__main__':
     # 每一pyqt5应用程序必须创建一个应用程序对象。sys.argv参数是一个列表，从命令行输入参数。
     app = QApplication(sys.argv)
     ex = AppWindow()
+    app.setActiveWindow(ex)
 
     # 系统exit()方法确保应用程序干净的退出
     # 的exec_()方法有下划线。因为执行是一个Python关键词。因此，exec_()代替

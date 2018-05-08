@@ -42,7 +42,7 @@ def main(txt=''):
     # _path = os.path.abspath(os.path.join(
     #     __file__, '..', 'docs', '订单明细目录.txt'))
     if (len(txt) == 0):
-        win32api.MessageBox(0, '请录入数据', 'error', win32con.MB_OK)
+        win32api.MessageBox(0, '请录入数据', '错误', win32con.MB_OK)
         return False
 
     _ret = do_shopcart(txt)
@@ -144,7 +144,7 @@ def do_shopcart(txt=''):
         pass
 
     if ishave_trade == False:
-        win32api.MessageBox(0, '没有找到交易平台', 'error', win32con.MB_OK)
+        win32api.MessageBox(0, '没有找到交易平台', '错误', win32con.MB_OK)
         # os._exit(0)
         # sys.exit()
         return False
