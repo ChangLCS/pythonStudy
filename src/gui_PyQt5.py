@@ -25,7 +25,10 @@ class AppWindow(QWidget):
     # 提交数据事件
     def submitEvent(self):
         print(self.textEdit.toPlainText())
-        ret = shopcartMain(self.textEdit.toPlainText())
+        if self.textEdit.toPlainText() == placeholder:
+            ret = shopcartMain('')
+        else:
+            ret = shopcartMain(self.textEdit.toPlainText())
         if ret == True:
             oldText = self.logText.toPlainText()
             newText = '\n----------%s----------\n%s\n%s' % (
