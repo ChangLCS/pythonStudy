@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os  # 文件、目录模块
 import time
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser)
+    QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider)
+from PyQt5.QtGui import (QIcon)
 from shopcart import main as shopcartMain
 
 
@@ -43,20 +45,28 @@ class AppWindow(QWidget):
         self.textEdit = QTextEdit()
         pass
 
+        iconSubmit = QIcon(os.path.abspath(os.path.join(
+            __file__, '..', 'images', 'icon-submit.png')))
+        iconClose = QIcon(os.path.abspath(os.path.join(
+            __file__, '..', 'images', 'icon-close.png')))
+
         # 提交按钮
         submitbtn = QPushButton('提交数据', self)
         submitbtn.resize(submitbtn.sizeHint())
         submitbtn.clicked.connect(self.submitEvent)
+        submitbtn.setIcon(iconSubmit)
 
         # 取消按钮
         cleanbtn = QPushButton('清除现有数据', self)
         cleanbtn.resize(cleanbtn.sizeHint())
         cleanbtn.clicked.connect(self.cleanEvent)
+        cleanbtn.setIcon(iconClose)
 
         # 清除历史数据按钮
         cleanlogbtn = QPushButton('清除历史数据', self)
         cleanlogbtn.resize(cleanlogbtn.sizeHint())
         cleanlogbtn.clicked.connect(self.cleanlogEvent)
+        cleanlogbtn.setIcon(iconClose)
 
         # 文本历史
         log = QLabel('历史记录')
