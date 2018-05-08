@@ -7,7 +7,7 @@ import time
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider)
 from PyQt5.QtGui import (QIcon, QPixmap)
-from PyQt5.QtCore import (QSize)
+from PyQt5.QtCore import (QSize, Qt)
 from shopcart import main as shopcartMain
 
 import requests
@@ -106,6 +106,7 @@ class AppWindow(QWidget):
 
         # 扫码录入文本框
         text = QLabel('扫码录入')
+        text.setAlignment(Qt.AlignCenter)
         self.textEdit = QTextEdit()
         self.textEdit.setText(placeholder)
         self.textEdit.setStyleSheet('color: #999;')
@@ -115,6 +116,7 @@ class AppWindow(QWidget):
 
         # 文本历史
         log = QLabel('历史记录')
+        log.setAlignment(Qt.AlignCenter)
         self.logText = QTextEdit()
         self.logText.setReadOnly(True)
         pass
@@ -128,10 +130,10 @@ class AppWindow(QWidget):
         grid = QGridLayout()
         grid.addWidget(text, 0, 0, 5, 2)
         grid.addWidget(self.textEdit, 0, 2, 6, 10)
-        grid.addWidget(cleanbtn, 5, 0, 1, 1)
+        grid.addWidget(cleanbtn, 5, 0, 1, 2, Qt.AlignCenter)
         grid.addWidget(submitbtn, 6, 2, 2, 10)
         grid.addWidget(log, 8, 0, 4, 2)
-        grid.addWidget(cleanlogbtn, 12, 0, 1, 1)
+        grid.addWidget(cleanlogbtn, 12, 0, 1, 2, Qt.AlignCenter)
         grid.addWidget(self.logText, 8, 2, 5, 10)
         pass
 
