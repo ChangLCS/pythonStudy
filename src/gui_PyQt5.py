@@ -6,7 +6,7 @@ import os  # 文件、目录模块
 import time
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider)
-from PyQt5.QtGui import (QIcon, QPixmap)
+from PyQt5.QtGui import (QIcon, QPixmap, QTextCursor, QCursor)
 from PyQt5.QtCore import (QSize, Qt)
 from shopcart import main as shopcartMain
 
@@ -51,6 +51,7 @@ class AppWindow(QWidget):
 
     # 文本焦点
     def textEditFocusInEvent(self, event):
+        self.textEdit.repaint()
         if (self.textEdit.toPlainText() == placeholder):
             self.textEdit.setText('')
             self.textEdit.setStyleSheet('color: #000;')
@@ -64,25 +65,37 @@ class AppWindow(QWidget):
         pass
 
     def initUI(self):
-        submitimgreq = requests.get(
-            'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-submit.png')
-        submitimg = QPixmap()
-        submitimg.loadFromData(submitimgreq.content)
-        iconSubmit = QIcon(submitimg)
+        try:
+            submitimgreq = requests.get(
+                'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-submit.png')
+            submitimg = QPixmap()
+            submitimg.loadFromData(submitimgreq.content)
+            iconSubmit = QIcon(submitimg)
+            pass
+        except Exception:
+            iconSubmit = QIcon()
+            print('iconSubmit 读取失败')
+            pass
         pass
 
-        closeimgreq = requests.get(
-            'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-reload.png')
-        closeimg = QPixmap()
-        closeimg.loadFromData(closeimgreq.content)
-        iconClose = QIcon(closeimg)
+        try:
+            closeimgreq = requests.get(
+                'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-reload.png')
+            closeimg = QPixmap()
+            closeimg.loadFromData(closeimgreq.content)
+            iconClose = QIcon(closeimg)
+            pass
+        except Exception:
+            iconClose = QIcon()
+            print('iconClose 读取失败')
+            pass
         pass
 
         # 提交按钮
         submitbtn = QPushButton('提交数据', self)
         submitbtn.setFixedHeight(60)
         submitbtn.setStyleSheet(
-            'font-size: 30px; font-weight: bold; ')
+            'font-size: 30px; font-weight: bold; border: 2px solid #333;')
         submitbtn.clicked.connect(self.submitEvent)
         submitbtn.setIcon(iconSubmit)
         submitbtn.setIconSize(QSize(40, 40))
@@ -91,6 +104,7 @@ class AppWindow(QWidget):
         # 取消按钮
         cleanbtn = QPushButton(self)
         cleanbtn.resize(cleanbtn.sizeHint())
+        cleanbtn.setStyleSheet('border: 1px solid #333;')
         cleanbtn.clicked.connect(self.cleanEvent)
         cleanbtn.setIcon(iconClose)
         cleanbtn.setIconSize(QSize(20, 20))
@@ -99,6 +113,7 @@ class AppWindow(QWidget):
         # 清除历史数据按钮
         cleanlogbtn = QPushButton(self)
         cleanlogbtn.resize(cleanlogbtn.sizeHint())
+        cleanlogbtn.setStyleSheet('border: 1px solid #333;')
         cleanlogbtn.clicked.connect(self.cleanlogEvent)
         cleanlogbtn.setIcon(iconClose)
         cleanlogbtn.setIconSize(QSize(20, 20))
@@ -108,6 +123,9 @@ class AppWindow(QWidget):
         text = QLabel('扫码录入')
         text.setAlignment(Qt.AlignCenter)
         self.textEdit = QTextEdit()
+        self.textEdit.setCursor(QCursor())
+        # 测试光标问题
+        self.textEdit.setCursor(QCursor())
         self.textEdit.setText(placeholder)
         self.textEdit.setStyleSheet('color: #999;')
         self.textEdit.focusInEvent = self.textEditFocusInEvent
