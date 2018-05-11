@@ -67,7 +67,7 @@ class AppWindow(QWidget):
     def initUI(self):
         try:
             submitimgreq = requests.get(
-                'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-submit.png')
+                'https://gpo.oss-cn-shenzhen.aliyuncs.com/static/icon-submit.png')
             submitimg = QPixmap()
             submitimg.loadFromData(submitimgreq.content)
             iconSubmit = QIcon(submitimg)
@@ -80,7 +80,7 @@ class AppWindow(QWidget):
 
         try:
             closeimgreq = requests.get(
-                'https://raw.githubusercontent.com/ChangLCS/pythonStudy/develop/src/images/icon-reload.png')
+                'https://gpo.oss-cn-shenzhen.aliyuncs.com/static/icon-reload.png')
             closeimg = QPixmap()
             closeimg.loadFromData(closeimgreq.content)
             iconClose = QIcon(closeimg)
