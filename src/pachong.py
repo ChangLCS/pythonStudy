@@ -4,48 +4,54 @@
 import time
 import os  # 文件、目录模块
 import sys
-import requests
+
 from pyquery import PyQuery as pq
 from selenium import webdriver  # python 启动浏览器
 
-baseUrl = 'http://app1.sfda.gov.cn/datasearch/face3/base.jsp'
+import json
+import re
 
-baseUrlParams = 'http://app1.sfda.gov.cn/datasearch/face3/base.jsp?tableId=34&tableName=TABLE34&title=%E8%8D%AF%E5%93%81%E7%94%9F%E4%BA%A7%E4%BC%81%E4%B8%9A&bcId=118103348874362715907884020353'
-
-testurl = 'http://app1.sfda.gov.cn/datasearch/face3/content.jsp?tableId=34&tableName=TABLE34&tableView=%E9%91%BD%EE%88%9A%E6%90%A7%E9%90%A2%E7%86%B6%E9%AA%87%E6%B5%BC%E4%BD%B7%E7%AC%9F&Id=1206'
+jsonurl = os.path.abspath(os.path.join(__file__, '../docs/data.json'))
 
 
-def main():
-    # data = {
-    #     'tableId': 34, 'tableName': 'TABLE34', 'title': '药品生产企业', 'bcId': '118103348874362715907884020353',
-    # }
-    # r = requests.get(testurl)
-    # print('r', r)
-    # doc = pq(baseUrl, data)
-    # print('doc', doc)
-    pass
-    driver = webdriver.Chrome()  # 打开谷歌
-    driver.get(baseUrlParams)
-    # driver.get(testurl)
-    driver.find_element_by_tag_name('body')
-    driver.maximize_window()
-    time.sleep(1)
-    driver.get(testurl)
+def getJSON():
+    with open(jsonurl, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+        return data
 
-    # _content = driver.find_element_by_id('content')
-    _content = driver.find_element_by_class_name('listmain')
-    _arr = _content.find_elements_by_tag_name('a')
 
-    _hrefarr = []
-    for _item in _arr:
-        print(_item)
-        _href = _item.get_attribute('href')
-        _innerHTML = _content.get_attribute('innerHTML')
-        # 'javascript:commitForECMA(callbackC,"content.jsp?tableId=34&tableName=TABLE34&tableView=%E9%91%BD%EE%88%9A%E6%90%A7%E9%90%A2%E7%86%B6%E9%AA%87%E6%B5%BC%E4%BD%B7%E7%AC%9F&Id=1206",null)'
-        _hrefarr.append(_href)
-        pass
+baseUrl = 'http://app1.sfda.gov.cn/datasearch/face3/'
+
+testurl = 'http://app1.sfda.gov.cn/datasearch/face3/content.jsp?tableId=41&tableName=TABLE41&tableView=药品经营企业&Id=412884'
+
+
+driver = webdriver.Chrome()  # 打开谷歌
+driver.maximize_window()
+time.sleep(1)
+
+
+def do(name, path):
+    driver.get('%s%s' % (baseUrl, path))
+    _html = driver.find_element_by_tag_name('html')
+    html = _html.get_attribute('innerHTML')
+    filepath = os.path.abspath(os.path.join(
+        __file__, '../html/', '%s%s' % (name, '.html')))
+    myfile = open(filepath, 'w', encoding='utf-8')
+    myfile.write(html)
+    myfile.close()
+    print(name)
     pass
 
 
 if __name__ == '__main__':
-    main()
+
+    json = getJSON()
+
+    for item in json:
+        m = re.match(r"([^']*)'(.*)'([^']*)", item['url'])
+        if (m):
+            path = m.group(2)
+            do(item['name'], path)
+        pass
+
+    # main(json)
