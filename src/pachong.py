@@ -11,27 +11,23 @@ from selenium import webdriver  # python 启动浏览器
 import json
 import re
 
-jsonurl = os.path.abspath(os.path.join(__file__, '../docs/data.json'))
+
+dirlist = os.listdir(os.path.abspath(os.path.join(__file__, '../json')))
 
 
-def getJSON():
-    with open(jsonurl, 'r', encoding='utf-8') as json_file:
+def getJSON(path):
+    with open(path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
         return data
 
 
-baseUrl = 'http://app1.sfda.gov.cn/datasearch/face3/'
-
-testurl = 'http://app1.sfda.gov.cn/datasearch/face3/content.jsp?tableId=41&tableName=TABLE41&tableView=药品经营企业&Id=412884'
-
-
-driver = webdriver.Chrome()  # 打开谷歌
+driver = webdriver.Chrome(os.path.abspath('C:\\chromedriver.exe'))  # 打开谷歌
 driver.maximize_window()
 time.sleep(1)
 
 
-def do(name, path):
-    driver.get('%s%s' % (baseUrl, path))
+def do(path, name):
+    driver.get(path)
     _html = driver.find_element_by_tag_name('html')
     html = _html.get_attribute('innerHTML')
     filepath = os.path.abspath(os.path.join(
@@ -40,18 +36,23 @@ def do(name, path):
     myfile.write(html)
     myfile.close()
     print(name)
+    time.sleep(2)
     pass
 
 
 if __name__ == '__main__':
 
-    json = getJSON()
+    for itemList in dirlist:
+        itemPath = os.path.abspath(
+            os.path.join(__file__, '../json/', itemList))
+        json = getJSON(itemPath)
 
-    for item in json:
-        m = re.match(r"([^']*)'(.*)'([^']*)", item['url'])
-        if (m):
-            path = m.group(2)
-            do(item['name'], path)
+        for item in json:
+            m = re.match(r"(.*)Id=(.*)", item['url'])
+            if (m):
+                id = m.group(2)
+                do(item['url'], id)
+            pass
         pass
 
     # main(json)
