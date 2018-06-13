@@ -36,7 +36,7 @@ def do(path, name):
     myfile.write(html)
     myfile.close()
     print(name)
-    time.sleep(2)
+    time.sleep(5)
     pass
 
 
@@ -45,10 +45,11 @@ if __name__ == '__main__':
     for itemList in dirlist:
         itemPath = os.path.abspath(
             os.path.join(__file__, '../json/', itemList))
-        json = getJSON(itemPath)
+        itemjson = getJSON(itemPath)
 
-        for item in json:
+        for item in itemjson:
             m = re.match(r"(.*)Id=(.*)", item['url'])
+            print('item', item)
             if (m):
                 id = m.group(2)
                 do(item['url'], id)
