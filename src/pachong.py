@@ -28,15 +28,20 @@ time.sleep(1)
 
 def do(path, name):
     driver.get(path)
+    driver.implicitly_wait(1)
     _html = driver.find_element_by_tag_name('html')
     html = _html.get_attribute('innerHTML')
-    filepath = os.path.abspath(os.path.join(
-        __file__, '../html/', '%s%s' % (name, '.html')))
-    myfile = open(filepath, 'w', encoding='utf-8')
-    myfile.write(html)
-    myfile.close()
-    print(name)
-    time.sleep(5)
+    if (html == '<head></head><body></body>'):
+        time.sleep(1)
+        do(path, name)
+    else:
+        filepath = os.path.abspath(os.path.join(
+            __file__, '../html/', '%s%s' % (name, '.html')))
+        myfile = open(filepath, 'w', encoding='utf-8')
+        myfile.write(html)
+        myfile.close()
+        print(name)
+        time.sleep(2)
     pass
 
 
