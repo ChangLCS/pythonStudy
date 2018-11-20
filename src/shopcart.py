@@ -90,19 +90,23 @@ def do_shopcart(txt=''):
 
     i = 0
     drug_arr = []
+    batch_arr = []
     num_arr = []
-    drug_code_index = 2  # 医院药品编码的位置索引
-    num_index = 4  # 药品数量的位置索引
+    drug_code_index = 0  # 医院药品编码的位置索引
+    batch_no_index = 1  # 批号
+    num_index = 2  # 药品数量的位置索引
     while i < nrows:
         row = txt_data[i]
         print('row', row)
-        if len(row) >= drug_code_index and len(row) >= num_index and len(str(row[drug_code_index])) > 0 and len(str(row[drug_code_index])) > 1 and len(str(row[num_index])) > 0 and row[num_index].isdigit():
+        if len(row) >= drug_code_index and len(row) >= batch_no_index and len(row) >= num_index and len(str(row[drug_code_index])) > 0 and len(str(row[drug_code_index])) > 1 and len(str(row[batch_no_index])) > 0 and len(str(row[num_index])) > 0 and row[num_index].isdigit():
             drug_arr.append(str(row[drug_code_index]))
+            batch_arr.append(str(row[batch_no_index]))
             num_arr.append(str(row[num_index]))
             pass
         i += 1
         pass
     print('drug_arr', drug_arr)
+    print('batch_arr', batch_arr)
     print('num_arr', num_arr)
 
     windows = {}  # 所有的窗口
@@ -152,7 +156,7 @@ def do_shopcart(txt=''):
     print('-------------------------------------------------')
     print('-------------------------------------------------')
 
-    def find_drugs(code, num, index):
+    def find_drugs(code, batchno, num, index):
         print(code, num, index)
         global ishave_num
         # 添加明细
@@ -166,18 +170,15 @@ def do_shopcart(txt=''):
         win32api.SetCursorPos([Pos.YPBMSS_X(), Pos.YPBMSS_Y()])  # 设置鼠标位置
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)  # 左键点击
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)  # 左键点击
-        time.sleep(1)
+        time.sleep(0.1)
         pass
 
         # 清空输入框原有参数
         win32api.keybd_event(win32con.VK_LCONTROL, 0, 0, 0)
-        time.sleep(0.1)
         win32api.keybd_event(KEYJSON['A'], 0, 0, 0)
-        time.sleep(0.1)
         win32api.keybd_event(KEYJSON['A'], 0, win32con.KEYEVENTF_KEYUP, 0)
         win32api.keybd_event(win32con.VK_LCONTROL, 0,
                              win32con.KEYEVENTF_KEYUP, 0)
-        time.sleep(0.2)
         pass
 
         # 把code转list，一个一个 输入进去
@@ -185,17 +186,14 @@ def do_shopcart(txt=''):
         for value in code_list:
             if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                 win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)
-                time.sleep(0.1)
                 pass
             win32api.keybd_event(KEYJSON[value], 0, 0, 0)
-            time.sleep(0.1)
             win32api.keybd_event(
                 KEYJSON[value], 0, win32con.KEYEVENTF_KEYUP, 0)
             if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
                 win32api.keybd_event(win32con.VK_SHIFT, 0,
                                      win32con.KEYEVENTF_KEYUP, 0)
                 pass
-            time.sleep(0.1)
             pass
 
         # 点击搜索按钮
@@ -240,11 +238,33 @@ def do_shopcart(txt=''):
             time.sleep(0.5)
 
             count = 0
-            while count < 2 * index + 1:
+            while count < 5 * index + 1:
                 TAB_KEYUP()
                 count += 1
                 pass
             time.sleep(0.5)
+
+            # 把code转list，一个一个 输入进去
+            batch_list = list(batchno)
+            print(batch_list)
+            for value in batch_list:
+                if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                    win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)
+                    pass
+
+                if value == '-':
+                    print(KEYJSON[value])
+
+                win32api.keybd_event(KEYJSON[value], 0, 0, 0)
+                win32api.keybd_event(
+                    KEYJSON[value], 0, win32con.KEYEVENTF_KEYUP, 0)
+                if value in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                    win32api.keybd_event(win32con.VK_SHIFT, 0,
+                                         win32con.KEYEVENTF_KEYUP, 0)
+                    pass
+                pass
+
+            TAB_KEYUP()
 
             num_list = list(str(int(num)))
             for value in num_list:
@@ -254,6 +274,8 @@ def do_shopcart(txt=''):
                 pass
             time.sleep(0.5)
 
+            TAB_KEYUP()
+
             print(code, num)
             pass
 
@@ -262,7 +284,7 @@ def do_shopcart(txt=''):
     while i < len(drug_arr):
         ishave_num = False
         print('num_arr[i]', num_arr[i])
-        find_drugs(drug_arr[i], float(num_arr[i]), table_index)
+        find_drugs(drug_arr[i], batch_arr[i], float(num_arr[i]), table_index)
         if ishave_num:
             table_index += 1
         i += 1
