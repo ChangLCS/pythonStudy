@@ -1,0 +1,18 @@
+#input_label {
+  background-color: #91c1e4;
+  color: #ffffff;
+}
+
+#input_text {
+  border: 1px solid #b1d3ec;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px;
+}
+
+/* #input_clean {} */
+
+#input_submit {}
+
+#history_clean {}
+
+#history_log {}

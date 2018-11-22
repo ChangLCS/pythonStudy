@@ -72,7 +72,12 @@ def TAB_KEYUP():
 
 def do_shopcart(txt=''):
     global ishave_num
-    txt_arr = txt.split('\n')
+    file_arr = txt.split(' || ')
+    txt_arr = []
+    for item in file_arr:
+        txt_arr.extend(item.split('\n'))
+        pass
+
     txt_data = []
     print('do_shopcart')
     try:
