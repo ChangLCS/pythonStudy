@@ -67,6 +67,16 @@ class AppWindow(QWidget):
             self.input_text.setStyleSheet('color: #999;')
         pass
 
+    # 最小化事件
+    def minEvent(self, event):
+        self.showMinimized()
+        pass
+
+    # 关闭事件
+    def closeEvent(self, event):
+        self.close()
+        pass
+
     def initUI(self):
         # 创建布局
         # 一般情况下我们都是把某个窗口部件放进栅格布局的一个单元中，但窗口部件有时也可能会需要占用多个单元。这时就需要用到addWidget()方法的一个重载版本，原型如下：
@@ -89,8 +99,14 @@ class AppWindow(QWidget):
         pass
 
         self.main_widget = QWidget()  # 创建窗口主部件
+        self.main_widget.setObjectName('main_widget')
         self.main_layout = QGridLayout()    # 创建主部件的网格布局
         self.main_widget.setLayout(self.main_layout)  # 设置窗口主部件布局为网格布局
+
+        self.top_widget = QWidget()  # 自定义标题栏
+        self.top_widget.setObjectName('top_widget')
+        self.top_layout = QGridLayout()  # 创建头部输入框主部件的网格布局层
+        self.top_widget.setLayout(self.top_layout)
 
         self.input_widget = QWidget()  # 头部输入框主部件
         self.input_widget.setObjectName('input_widget')
@@ -102,9 +118,27 @@ class AppWindow(QWidget):
         self.history_layout = QGridLayout()  # 创建历史记录主部件的网格布局层
         self.history_widget.setLayout(self.history_layout)  # 设置历史记录主部件布局为网格
 
+        # self.main_layout.addWidget(self.top_widget, 0, 0, 1, 12)
         self.main_layout.addWidget(self.input_widget, 0, 0, 12, 12)
-        self.main_layout.addWidget(self.history_widget, 12, 0, 12, 12)
+        self.main_layout.addWidget(self.history_widget, 12, 0, 11, 12)
 
+        # self.top_blank = QWidget()
+        # self.top_blank.setObjectName('top_blank')
+        # 头部按钮
+        # self.top_min = QPushButton(
+        #     qtawesome.icon('fa.minus', color=_baseColor), '')
+        # self.top_min.setObjectName('top_min')
+        # self.top_min.clicked.connect(self.minEvent)
+        # self.top_close = QPushButton(
+        #     qtawesome.icon('fa.close', color=_baseColor), '')
+        # self.top_close.setObjectName('top_close')
+        # self.top_close.clicked.connect(self.closeEvent)
+
+        # self.top_layout.addWidget(self.top_blank, 0, 0, 1, 22)
+        # self.top_layout.addWidget(self.top_min, 0, 23, 1, 1)
+        # self.top_layout.addWidget(self.top_close, 0, 24, 1, 1)
+
+        # input 各个组件
         self.input_label = QLabel('扫码录入')  # 扫码录入
         self.input_label.setObjectName('input_label')
 
@@ -133,6 +167,7 @@ class AppWindow(QWidget):
         self.input_layout.addWidget(self.input_clean, 2, 0, 2, 3)
         self.input_layout.addWidget(self.input_text, 0, 3, 9, 9)
         self.input_layout.addWidget(self.input_submit, 9, 3, 3, 9)
+        pass
 
         # 历史记录
         self.history_label = QLabel('历史记录')  # 历史记录
@@ -151,6 +186,23 @@ class AppWindow(QWidget):
         self.history_layout.addWidget(self.history_label, 1, 0, 1, 3)
         self.history_layout.addWidget(self.history_clean, 2, 0, 1, 3)
         self.history_layout.addWidget(self.history_log, 0, 3, 9, 9)
+        pass
+
+        self.top_widget.setStyleSheet('''
+#top_widget {
+    background-color: #f3f7fe;
+}
+
+#top_min {
+    background: none;
+    border: none;
+}
+
+#top_close {
+    background: none;
+    border: none;
+}
+''')
 
         self.input_label.setFixedWidth(160)
         self.input_label.setFixedHeight(33)
@@ -187,8 +239,8 @@ class AppWindow(QWidget):
     background-color: #ffffff;
     border: 1px solid #91c1e4;
     font-size: 20px;
-    height: 50px;
-    border-radius: 25px;
+    height: 60px;
+    border-radius: 30px;
 }
 ''')
 
@@ -225,11 +277,28 @@ class AppWindow(QWidget):
 }
 ''')
 
-        self.main_layout.setSpacing(0)
-        pass
+        self.main_widget.setStyleSheet('''
+#main_widget {
+    border-radius: 10px;
+    border: 2px solid #91c1e4;
+}
+''')
 
         self.setLayout(self.main_layout)
         pass
+
+        # self.setWindowOpacity(0.9)
+        # self.setAutoFillBackground(False)
+        # self.setWindowFlag(Qt.FramelessWindowHint)  # 隐藏边框
+        # self.setAttribute(Qt.WA_TranslucentBackground)  # 设置窗口背景透明
+
+        self.main_layout.setSpacing(0)
+        pass
+
+        pass
+
+        # self.setLayout(self.main_layout)
+        # pass
 
     # 控制窗口显示在屏幕中心的方法
     def center(self):
