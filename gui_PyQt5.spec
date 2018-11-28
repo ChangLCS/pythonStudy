@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['src\\gui_PyQt5.py'],
-             pathex=['f:\\\\Work\\\\domeSelenium1', 'f:\\\\Work\\\\domeSelenium1\\\\src', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\python36.zip', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\DLLs', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Roaming\\\\Python\\\\Python36\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\Pythonwin', 'F:\\Work\\domeSelenium1'],
+             pathex=['F:\\\\Work\\\\domeSelenium1', 'F:\\\\Work\\\\domeSelenium1\\\\src', 'F:\\\\Work\\\\domeSelenium1\\\\src\\\\images', 'F:\\\\Work\\\\domeSelenium1\\\\src\\\\images\\\\robot-nothing.png', 'F:\\\\Work\\\\domeSelenium1\\\\src\\\\images\\\\robot-text.png', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\python36.zip', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\DLLs', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Roaming\\\\Python\\\\Python36\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\win32\\\\lib', 'C:\\\\Users\\\\Dev\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python36\\\\lib\\\\site-packages\\\\Pythonwin', 'F:\\Work\\domeSelenium1'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -14,6 +14,11 @@ a = Analysis(['src\\gui_PyQt5.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
+
+a.datas +=(('robot-nothing.png','F:\\Work\\domeSelenium1\\src\\images\\robot-nothing.png','DATA'),
+('robot-text.png','F:\\Work\\domeSelenium1\\src\\images\\robot-text.png','DATA'))
+
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,

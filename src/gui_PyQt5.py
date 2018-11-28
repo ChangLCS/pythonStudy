@@ -7,7 +7,7 @@ import time
 import qtawesome
 
 from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider)
+    QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider, QToolButton)
 from PyQt5.QtGui import (QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor)
 from PyQt5.QtCore import (QSize, Qt)
 from shopcart import main as shopcartMain
@@ -17,6 +17,13 @@ import requests
 _placeholder = '请扫码录入并点击提交，'
 _baseColor = '#91c1e4'
 _fontFamily = QFont('Microsoft YaHei')
+
+
+class PesterInput(QTextEdit):
+    def keyPressEvent(self, event):
+        QTextEdit.keyPressEvent(self, event)
+        self.keyPressEventAfter()
+        pass
 
 
 class AppWindow(QWidget):
@@ -32,6 +39,7 @@ class AppWindow(QWidget):
             ret = shopcartMain('')
         else:
             ret = shopcartMain(self.input_text.toPlainText())
+        self.robot.setIcon(self.robot_nothing)
         if ret == True:
             oldText = self.history_log.toPlainText()
             newText = '\n----------%s----------\n%s\n%s' % (
@@ -43,7 +51,6 @@ class AppWindow(QWidget):
 
     # 清除文本框
     def cleanEvent(self):
-        print(self.input_text.toPlainText())
         self.input_text.setText('')
         pass
 
@@ -52,9 +59,19 @@ class AppWindow(QWidget):
         self.history_log.setText('')
         pass
 
+    # 输入框文本修改时
+    def textChangeEvent(self):
+        print(self.input_text.toPlainText())
+        if (len(self.input_text.toPlainText()) == 0):
+            self.robot.setIcon(self.robot_nothing)
+            self.input_text.setStyleSheet('color: #999;')
+        else:
+            self.robot.setIcon(self.robot_text)
+            self.input_text.setStyleSheet('color: #000;')
+        pass
+
     # 文本焦点
     def textEditFocusInEvent(self, event):
-        self.input_text.repaint()
         if (self.input_text.toPlainText() == _placeholder):
             self.input_text.setText('')
             self.input_text.setStyleSheet('color: #000;')
@@ -105,6 +122,12 @@ class AppWindow(QWidget):
 
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
+        self.robot_nothing = QIcon(
+            'F:\\Work\\domeSelenium1\\src\\images\\robot-nothing.png')
+        self.robot_text = QIcon(
+            'F:\\Work\\domeSelenium1\\src\\images\\robot-text.png')
+        pass
+
         self.top_widget = QWidget()  # 自定义标题栏
         self.top_widget.setObjectName('top_widget')
         self.top_layout = QGridLayout()  # 创建头部输入框主部件的网格布局层
@@ -123,6 +146,11 @@ class AppWindow(QWidget):
         # self.main_layout.addWidget(self.top_widget, 0, 0, 1, 12)
         self.main_layout.addWidget(self.input_widget, 0, 0, 12, 12)
         self.main_layout.addWidget(self.history_widget, 12, 0, 11, 12)
+
+        self.robot = QPushButton()
+        self.robot.setIcon(self.robot_nothing)
+        self.robot.setIconSize(QSize(150, 150))
+        self.robot.setStyleSheet('border: none; background: none;')
 
         # self.top_blank = QWidget()
         # self.top_blank.setObjectName('top_blank')
@@ -150,10 +178,11 @@ class AppWindow(QWidget):
         self.input_clean.setObjectName('input_clean')
         self.input_clean.clicked.connect(self.cleanEvent)
 
-        self.input_text = QTextEdit()  # 输入框
+        self.input_text = PesterInput(self)  # 输入框
         self.input_text.setObjectName('input_text')
         # self.input_text.setTextColor(QColor('#999'))
         self.input_text.setText(_placeholder)
+        self.input_text.keyPressEventAfter = self.textChangeEvent
         self.input_text.focusInEvent = self.textEditFocusInEvent
         self.input_text.focusOutEvent = self.textEditFocusOutEvent
 
@@ -166,6 +195,7 @@ class AppWindow(QWidget):
 
         self.input_layout.addWidget(self.input_label, 1, 0, 1, 3)
         self.input_layout.addWidget(self.input_clean, 2, 0, 2, 3)
+        self.input_layout.addWidget(self.robot, 5, 0, 7, 3)
         self.input_layout.addWidget(self.input_text, 0, 3, 9, 9)
         self.input_layout.addWidget(self.input_submit, 9, 3, 3, 9)
         pass
