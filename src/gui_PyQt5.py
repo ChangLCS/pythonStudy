@@ -103,6 +103,8 @@ class AppWindow(QWidget):
         self.main_layout = QGridLayout()    # 创建主部件的网格布局
         self.main_widget.setLayout(self.main_layout)  # 设置窗口主部件布局为网格布局
 
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+
         self.top_widget = QWidget()  # 自定义标题栏
         self.top_widget.setObjectName('top_widget')
         self.top_layout = QGridLayout()  # 创建头部输入框主部件的网格布局层
@@ -150,11 +152,10 @@ class AppWindow(QWidget):
 
         self.input_text = QTextEdit()  # 输入框
         self.input_text.setObjectName('input_text')
+        # self.input_text.setTextColor(QColor('#999'))
         self.input_text.setText(_placeholder)
         self.input_text.focusInEvent = self.textEditFocusInEvent
         self.input_text.focusOutEvent = self.textEditFocusOutEvent
-
-        # self.input_text.setcolor(QColor('#f00'))
 
         self.input_submit = QPushButton(qtawesome.icon(
             'fa.check-circle', color=_baseColor), '提交数据')   # 提交框
