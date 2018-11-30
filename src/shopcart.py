@@ -41,8 +41,9 @@ def main(txt=''):
     print(__file__)
     # _path = os.path.abspath(os.path.join(
     #     __file__, '..', 'docs', '订单明细目录.txt'))
+    print(win32con.MB_SYSTEMMODAL)
     if (len(txt) == 0):
-        win32api.MessageBox(0, '请录入数据', '错误', win32con.MB_OK)
+        win32api.MessageBox(0, '请录入数据', '错误', win32con.MB_SYSTEMMODAL)
         return False
 
     _ret = do_shopcart(txt)
@@ -153,7 +154,7 @@ def do_shopcart(txt=''):
         pass
 
     if ishave_trade == False:
-        win32api.MessageBox(0, '没有找到交易平台', '错误', win32con.MB_OK)
+        win32api.MessageBox(0, '没有找到交易平台', '错误', win32con.MB_SYSTEMMODAL)
         # os._exit(0)
         # sys.exit()
         return False
@@ -161,9 +162,27 @@ def do_shopcart(txt=''):
     print('-------------------------------------------------')
     print('-------------------------------------------------')
 
+    # 判断当前是否在自动入库页面
+    isIn = True
+    img = ImageGrab.grab(Pos.TJMX_SCREEN_POS())
+    px = img.load()
+    for x in range(img.width):
+        for y in range(img.height):
+            print(str(px[x, y]))
+            if (str(px[x, y]) != str((8, 104, 207))):
+                isIn = False
+                break
+            pass
+        pass
+
+    if isIn == False:
+        win32api.MessageBox(0, '当前不在自动入库模块', '错误', win32con.MB_SYSTEMMODAL)
+        return False
+
     def find_drugs(code, batchno, num, index):
         print(code, num, index)
         global ishave_num
+
         # 添加明细
         win32api.SetCursorPos([Pos.TJMX_X(), Pos.TJMX_Y()])  # 设置鼠标位置
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)  # 左键点击

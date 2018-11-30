@@ -1,18 +1,20 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import os  # 文件、目录模块
+import sys
 import time
+
 import qtawesome
+from PyQt5.QtCore import QByteArray, QSize, Qt
+from PyQt5.QtGui import (QColor, QCursor, QFont, QIcon, QImage, QPixmap,
+                         QTextCursor)
+from PyQt5.QtWidgets import (QApplication, QDesktopWidget, QFileIconProvider,
+                             QGridLayout, QLabel, QLineEdit, QPushButton,
+                             QTextBrowser, QTextEdit, QToolButton, QWidget)
 
-from PyQt5.QtWidgets import (
-    QWidget, QLabel, QLineEdit, QTextEdit, QGridLayout, QApplication, QPushButton, QDesktopWidget, QTextBrowser, QFileIconProvider, QToolButton)
-from PyQt5.QtGui import (QIcon, QPixmap, QTextCursor, QCursor, QFont, QColor)
-from PyQt5.QtCore import (QSize, Qt)
+from images import imageRobotNothing, imageRobotText, logo
 from shopcart import main as shopcartMain
-
-import requests
 
 _placeholder = '请扫码录入并点击提交，'
 _baseColor = '#91c1e4'
@@ -40,6 +42,8 @@ class AppWindow(QWidget):
         else:
             ret = shopcartMain(self.input_text.toPlainText())
         self.robot.setIcon(self.robot_nothing)
+        pass
+
         if ret == True:
             oldText = self.history_log.toPlainText()
             newText = '\n----------%s----------\n%s\n%s' % (
@@ -111,6 +115,12 @@ class AppWindow(QWidget):
         self.center()
         # 设置窗口的标题
         self.setWindowTitle('自动录单系统')
+
+        logo_qb = QByteArray.fromBase64(logo.logo)
+        logo_base = QPixmap()
+        logo_base.loadFromData(logo_qb)
+        self.setWindowIcon(QIcon(logo_base))
+
         # 显示在屏幕上
         self.show()
         pass
@@ -122,10 +132,17 @@ class AppWindow(QWidget):
 
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.robot_nothing = QIcon(
-            'F:\\Work\\domeSelenium1\\src\\images\\robot-nothing.png')
-        self.robot_text = QIcon(
-            'F:\\Work\\domeSelenium1\\src\\images\\robot-text.png')
+        robot_nothing_qb = QByteArray.fromBase64(
+            imageRobotNothing.robot_nothing)
+        robot_nothing_base = QPixmap()
+        robot_nothing_base.loadFromData(robot_nothing_qb)
+        self.robot_nothing = QIcon(robot_nothing_base)
+        pass
+
+        robot_text_qb = QByteArray.fromBase64(imageRobotText.robot_text)
+        robot_text_base = QPixmap()
+        robot_text_base.loadFromData(robot_text_qb)
+        self.robot_text = QIcon(robot_text_base)
         pass
 
         self.top_widget = QWidget()  # 自定义标题栏
