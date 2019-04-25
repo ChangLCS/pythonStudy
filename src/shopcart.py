@@ -262,7 +262,8 @@ def do_shopcart(txt=''):
             time.sleep(0.5)
 
             count = 0
-            while count < 5 * index + 1:
+            # while count < 5 * index + 1:
+            while count < 5 * index + 2:  # 2.0
                 TAB_KEYUP()
                 count += 1
                 pass
@@ -313,6 +314,8 @@ def do_shopcart(txt=''):
             table_index += 1
         i += 1
         pass
+
+    win32api.MessageBox(0, '录入完成', '成功', win32con.MB_SYSTEMMODAL)
 
     # txt = open(file_path, 'w')
     # txt.write('')
