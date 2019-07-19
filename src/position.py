@@ -38,7 +38,7 @@ class Position:
     # 第一条数据的位置
     def FIRSTDATA_X(self):
         # return int(self.now_hWnd_X1 + 420)
-        return int(self.now_hWnd_X1 + 320) # 2.0
+        return int(self.now_hWnd_X1 + 320)  # 2.0
 
     def FIRSTDATA_Y(self):
         return int(self.now_hWnd_Y1 + 340)
@@ -78,7 +78,7 @@ class Position:
         return int(self.now_hWnd_X2 - self.now_hWnd_X1 - (self.now_hWnd_X2 - self.now_hWnd_X1) * 0.05 - 150)
 
     def SUREBTN_Y(self):
-        return int(self.now_hWnd_Y2 - (self.now_hWnd_Y2 - self.now_hWnd_Y1) * 0.15 - 50)
+        return int(self.now_hWnd_Y2 - (self.now_hWnd_Y2 - self.now_hWnd_Y1) * 0.10 - 50)
 
     # 弹框列表第一条的选中按钮区域
     def SCREEN_IMAGE_POSITION(self):
