@@ -27,12 +27,12 @@ class Position:
 
     # 添加明细按钮位置
     def TJMX_SCREEN_POS(self):
-        _X1 = int(self.now_hWnd_X1 + 280)
-        _X2 = int(self.now_hWnd_X1 + 290)
+        _X1 = int(self.now_hWnd_X1 + 315)
+        _X2 = int(self.now_hWnd_X1 + 320)
         # _Y1 = int(self.now_hWnd_Y1 + 260) # 1.0
         # _Y2 = int(self.now_hWnd_Y1 + 270)
-        _Y1 = int(self.now_hWnd_Y1 + 275)  # 2.0
-        _Y2 = int(self.now_hWnd_Y1 + 280)
+        _Y1 = int(self.now_hWnd_Y1 + 270)  # 2.0
+        _Y2 = int(self.now_hWnd_Y1 + 275)
         return (_X1, _Y1, _X2, _Y2)
 
     # 第一条数据的位置
